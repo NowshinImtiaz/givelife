@@ -35,29 +35,14 @@ class _SplashState extends State<Splash>{
 
           children: [
 
-          TweenAnimationBuilder<double>(
-            tween: Tween<double>(
-              begin: 0.0,
-              end:1.0,
-            ),
-            duration: Duration(milliseconds: 1800),
-            curve: Curves.easeOutBack,
 
-            builder: (context,value,child){
-              return Transform.scale(
-                scale: value,
-                child: child,
-              );
-            },
-
-
-          child: Icon(
+          Icon(
                 Icons.water_drop,
                 size: 150,
                 color: Color(0xB549010F),
 
               ),
-          ),
+
 
             SizedBox(height: 20 ),
               Text(
@@ -71,7 +56,7 @@ class _SplashState extends State<Splash>{
               SizedBox(height:10),
 
         Text(
-                'Every drop counts .',
+                'Every drop counts.',
                 style: TextStyle(
                   fontSize: 20,
 
