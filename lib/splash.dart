@@ -19,10 +19,11 @@ class _SplashState extends State<Splash>{
     Timer(
       const Duration(milliseconds: 4000),(){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Login(),),);
+
     },
     );
   }
-  
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -32,18 +33,16 @@ class _SplashState extends State<Splash>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           //crossAxisAlignment: CrossAxisAlignment.stretch,
-
+        
           children: [
-
-
           Icon(
                 Icons.water_drop,
                 size: 150,
                 color: Color(0xB549010F),
-
+        
               ),
-
-
+        
+        
             SizedBox(height: 20 ),
               Text(
                 'GiveLife',
@@ -54,12 +53,12 @@ class _SplashState extends State<Splash>{
                 ),
               ),
               SizedBox(height:10),
-
+        
         Text(
                 'Every drop counts.',
                 style: TextStyle(
                   fontSize: 20,
-
+        
                   color: Color(0xFFF8F3F3),
                 ),
               ),
@@ -69,5 +68,5 @@ class _SplashState extends State<Splash>{
         //backgroundColor: Color(0xFFA10725),
       );
   }
-  
+
 }
