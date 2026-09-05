@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget{
   const Login({super.key});
@@ -123,7 +124,7 @@ class _LoginState extends State<Login> {
               ),
             ),
             onPressed: () {
-              print('ElevatedButton Clicked!');
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Home(),),);
             },
             child: const Text(
               'Log in',
@@ -144,7 +145,7 @@ class _LoginState extends State<Login> {
               ),
               TextButton(
                 onPressed: () {
-                  print('TextButton Clicked!');
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup(),),);
                 },
                 child: const Text(
                   'Create an account',
