@@ -52,12 +52,12 @@ class _SplashState extends State<Splash>{
                   color: Color(0xFFF8F3F3),
                 ),
               ),
-              SizedBox(height:10),
+              SizedBox(height:5),
         
         Text(
                 'Every drop counts.',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
         
                   color: Color(0xFFF8F3F3),
                 ),
