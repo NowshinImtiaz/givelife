@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'SearchDonors.dart';
 import 'settings.dart';
 import 'donation_history.dart';
+import 'donate_blood.dart';
+import 'request_blood_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userName;
@@ -178,7 +180,14 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SearchDonors(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: darkMaroon,
@@ -201,7 +210,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const RequestBloodScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: darkMaroon,
                       foregroundColor: lightBg,
@@ -234,6 +251,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
           else if(index==1){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
           }
 
           else if(index==3){

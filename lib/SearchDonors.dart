@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'settings.dart';
 import 'donation_history.dart';
 import 'home.dart';
+import 'donate_blood.dart';
 
 class SearchDonors extends StatefulWidget {
   final bool isProfileSetup;
@@ -245,6 +246,10 @@ class _SearchDonorsState extends State<SearchDonors> {
 
           else if(index==1){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
           }
 
           else if(index==3){

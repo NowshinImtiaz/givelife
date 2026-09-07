@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'donation_history.dart';
 import 'SearchDonors.dart';
 import 'home.dart';
+import 'donate_blood.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -220,6 +221,10 @@ class _SettingsState extends State<Settings> {
 
           else if(index==1){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
           }
 
           else if(index==3){
