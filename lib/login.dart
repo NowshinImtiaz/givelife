@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:givelife/home.dart';
+import 'home.dart';
 import 'signup.dart';
 
 class Login extends StatefulWidget{
