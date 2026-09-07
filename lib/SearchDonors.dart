@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart';
 
 class SearchDonors extends StatefulWidget {
   final bool isProfileSetup;
@@ -235,9 +236,16 @@ class _SearchDonorsState extends State<SearchDonors> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
         },
         selectedItemColor: darkMaroon,
         unselectedItemColor: Colors.grey,

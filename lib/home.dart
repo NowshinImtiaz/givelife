@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'SearchDonors.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userName;
@@ -175,7 +176,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SearchDonors()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: darkMaroon,
@@ -198,7 +204,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SearchDonors()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: darkMaroon,
                       foregroundColor: lightBg,
@@ -223,9 +234,16 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SearchDonors()),
+            );
+          } else {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
         },
         selectedItemColor: darkMaroon,
         unselectedItemColor: Colors.grey,
