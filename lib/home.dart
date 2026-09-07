@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  static const Color darkMaroon = Color(0xFF49010F);
+  static const Color darkMaroon = Color(0xFFA10725);
   static const Color lightBg = Color(0xFFF8F3F3);
 
   @override
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: darkMaroon,
         foregroundColor: lightBg,
         elevation: 0,
-        title: const Text('GiveLife - Home'),
+        title: const Text('GiveLife - Home', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined, color: lightBg),
@@ -233,9 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Requests'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Donate'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: 'Donate'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
+          BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: 'More'),
         ],
       ),
     );
