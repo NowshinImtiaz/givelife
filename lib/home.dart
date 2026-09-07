@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'SearchDonors.dart';
+import 'settings.dart';
+import 'donation_history.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userName;
@@ -222,11 +225,26 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+
+        onTap: (index){
+          if(index==0){}
+
+          else if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+          }
+
+          else if(index==3){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
+          }
         },
+
+
+
+
         selectedItemColor: darkMaroon,
         unselectedItemColor: Colors.grey,
         backgroundColor: Colors.white,

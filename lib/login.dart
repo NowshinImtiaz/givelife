@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'signup.dart';
-import 'home.dart';
+//import 'home.dart';
 
 class Login extends StatefulWidget{
   const Login({super.key});
@@ -142,7 +142,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Home(),),);            },
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);            },
                   child: const Text(
                     'Log in',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
