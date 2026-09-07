@@ -63,23 +63,6 @@ class _SplashState extends State<Splash>{
                 ),
               ),
 
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: const Color(0xB549010F), // Button background color
-            //     foregroundColor: Colors.white,            // Text & Icon color
-            //     padding: const EdgeInsets.symmetric(horizontal: 33, vertical: 15),
-            //     elevation: 4,                             // Shadow depth
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(20), // Rounded corners
-            //     ),
-            //   ),
-            //   onPressed: () {
-            //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Login(),),);            },
-            //   child: const Text(
-            //     'Log in',
-            //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            //   ),
-            // ),
             ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'settings.dart';
-
+import 'SearchDonors.dart';
+import 'home.dart';
 void main() {
   runApp(
     const MaterialApp(
@@ -186,35 +187,52 @@ class DonationHistory extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'HOME',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'SEARCH',
+            label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_drop),
-            label: 'DONATE',
+            icon: Icon(Icons.water_drop,color: Color(0xFFA10725),),
+            label: 'Donate',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'HISTORY',
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.more_horiz),
-            label: 'MORE',
+            label: 'More',
           ),
         ],
 
         onTap: (index) {
-          if (index == 4) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Settings(),
-              ),
-            );
+
+          if(index==0){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
           }
+
+          else if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==3){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+          }
+
+          else if(index==4){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
+          }
+
+          // if (index == 4) {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const Settings(),
+          //     ),
+          //   );
+          // }
         },
       ),
     );

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'settings.dart';
+import 'donation_history.dart';
+import 'home.dart';
 
 class SearchDonors extends StatefulWidget {
   final bool isProfileSetup;
@@ -235,9 +238,22 @@ class _SearchDonorsState extends State<SearchDonors> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          if(index==0){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
+
+          }
+
+          else if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==3){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+          }
+
+          else if(index==4){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
+          }
         },
         selectedItemColor: darkMaroon,
         unselectedItemColor: Colors.grey,
@@ -246,7 +262,7 @@ class _SearchDonorsState extends State<SearchDonors> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: 'Donate'),
+          BottomNavigationBarItem(icon: Icon(Icons.water_drop,color: Color(0xFFA10725),), label: 'Donate'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
           BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: 'More'),
         ],

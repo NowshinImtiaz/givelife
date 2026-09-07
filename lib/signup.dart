@@ -217,7 +217,10 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);            },
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),
+                          (route) => false,
+                      );
+                      },
                     child: const Text(
                       'Create Account',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

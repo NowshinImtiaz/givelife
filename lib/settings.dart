@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'donation_history.dart';
+import 'SearchDonors.dart';
+import 'home.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -32,6 +34,16 @@ class _SettingsState extends State<Settings> {
 
             child: Row(
               children: [
+
+                 IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xFFF8F3F3),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
 
                 Container(
                   width: 50,
@@ -179,34 +191,43 @@ class _SettingsState extends State<Settings> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'HOME',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'SEARCH',
+            label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_drop),
-            label: 'DONATE',
+            icon: Icon(Icons.water_drop,color: Color(0xFFA10725),),
+            label: 'Donate',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'HISTORY',
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.more_horiz),
-            label: 'MORE',
+            label: 'More',
           ),
         ],
 
         onTap: (index) {
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DonationHistory(),
-              ),
-            );
+
+
+          if(index==0){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
+          }
+
+          else if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==3){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+          }
+
+          else if(index==4){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
           }
         },
       ),

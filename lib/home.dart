@@ -227,17 +227,20 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _currentIndex,
 
         onTap: (index){
-          if(index==0){}
+          if(index==0){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
+
+          }
 
           else if(index==1){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
           }
 
-          else if(index==2){
+          else if(index==3){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
           }
 
-          else if(index==3){
+          else if(index==4){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
           }
         },
@@ -252,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: 'Donate'),
+          BottomNavigationBarItem(icon: Icon(Icons.water_drop,color: Color(0xFFA10725),), label: 'Donate'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
           BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: 'More'),
         ],
