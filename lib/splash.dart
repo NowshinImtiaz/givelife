@@ -33,16 +33,16 @@ class _SplashState extends State<Splash>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           //crossAxisAlignment: CrossAxisAlignment.stretch,
-        
+
           children: [
           Icon(
                 Icons.water_drop,
                 size: 150,
                 color: Color(0xB549010F),
-        
+
               ),
-        
-        
+
+
             SizedBox(height: 20 ),
               Text(
                 'GiveLife',
@@ -53,15 +53,33 @@ class _SplashState extends State<Splash>{
                 ),
               ),
               SizedBox(height:5),
-        
+
         Text(
                 'Every drop counts.',
                 style: TextStyle(
                   fontSize: 18,
-        
+
                   color: Color(0xFFF8F3F3),
                 ),
               ),
+
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: const Color(0xB549010F), // Button background color
+            //     foregroundColor: Colors.white,            // Text & Icon color
+            //     padding: const EdgeInsets.symmetric(horizontal: 33, vertical: 15),
+            //     elevation: 4,                             // Shadow depth
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(20), // Rounded corners
+            //     ),
+            //   ),
+            //   onPressed: () {
+            //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Login(),),);            },
+            //   child: const Text(
+            //     'Log in',
+            //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            //   ),
+            // ),
             ],
         ),
       ),
