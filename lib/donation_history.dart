@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'settings.dart';
 import 'SearchDonors.dart';
 import 'home.dart';
+import 'donate_blood.dart';
 void main() {
   runApp(
     const MaterialApp(
@@ -215,6 +216,10 @@ class DonationHistory extends StatelessWidget {
 
           else if(index==1){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
           }
 
           else if(index==3){
