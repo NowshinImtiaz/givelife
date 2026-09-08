@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'give_life_models.dart';
 import 'request_blood_screen.dart';
 import 'home.dart';
@@ -24,9 +23,6 @@ class _DonateBloodScreenState extends State<DonateBloodScreen> {
   bool findingLocation = false;
   String donorBloodGroup = 'O+';
   String acceptedRequest = '';
-
-  double? currentLatitude;
-  double? currentLongitude;
 
   Map<String, Appointment> appointments = {};
   List<BloodRequest> nearbyRequests = [];
@@ -158,159 +154,76 @@ class _DonateBloodScreenState extends State<DonateBloodScreen> {
     }
   }
 
-  Future<Position?> getCurrentLocation() async {
-    bool locationEnabled =
-        await Geolocator.isLocationServiceEnabled();
-
-    if (locationEnabled == false) {
-      showMessage(
-        'Please turn on your device location or GPS.',
-        Colors.orange,
-      );
-
-      return null;
-    }
-
-    LocationPermission permission =
-        await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-
-    if (permission == LocationPermission.denied) {
-      showMessage(
-        'Location permission was denied.',
-        const Color(0xFFA10725),
-      );
-
-      return null;
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      showMessage(
-        'Please enable location permission from Settings.',
-        const Color(0xFFA10725),
-      );
-
-      return null;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-      ),
-    );
-
-    return position;
-  }
-
   Future<void> findNearbyRequests() async {
     setState(() {
       findingLocation = true;
     });
 
-    try {
-      Position? position = await getCurrentLocation();
+    await Future.delayed(const Duration(milliseconds: 500));
 
-      if (position == null) {
-        setState(() {
-          findingLocation = false;
-        });
-
-        return;
-      }
-
-      currentLatitude = position.latitude;
-      currentLongitude = position.longitude;
-
-      List<BloodRequest> requests = [
-        BloodRequest(
-          patientName: 'Rahim Ahmed',
-          bloodGroup: 'O+',
-          hospitalName: 'Nearby General Hospital',
-          urgency: 'Critical',
-          units: 2,
-          latitude: position.latitude + 0.004,
-          longitude: position.longitude + 0.003,
-        ),
-        BloodRequest(
-          patientName: 'Nusrat Jahan',
-          bloodGroup: 'A-',
-          hospitalName: 'Community Medical Center',
-          urgency: 'Urgent',
-          units: 1,
-          latitude: position.latitude - 0.008,
-          longitude: position.longitude + 0.006,
-        ),
-        BloodRequest(
-          patientName: 'Karim Hasan',
-          bloodGroup: 'B+',
-          hospitalName: 'Central Care Hospital',
-          urgency: 'Needed',
-          units: 3,
-          latitude: position.latitude + 0.014,
-          longitude: position.longitude - 0.009,
-        ),
-        BloodRequest(
-          patientName: 'Fatema Akter',
-          bloodGroup: 'AB+',
-          hospitalName: 'City Emergency Hospital',
-          urgency: 'Critical',
-          units: 2,
-          latitude: position.latitude - 0.020,
-          longitude: position.longitude - 0.012,
-        ),
-        BloodRequest(
-          patientName: 'Sakib Hossain',
-          bloodGroup: 'O-',
-          hospitalName: 'Life Care Clinic',
-          urgency: 'Urgent',
-          units: 1,
-          latitude: position.latitude + 0.030,
-          longitude: position.longitude + 0.018,
-        ),
-      ];
-
-      for (int i = 0; i < requests.length; i++) {
-        double distanceInMeters = Geolocator.distanceBetween(
-          position.latitude,
-          position.longitude,
-          requests[i].latitude,
-          requests[i].longitude,
-        );
-
-        requests[i].distanceInKm = distanceInMeters / 1000;
-      }
-
-      requests.sort(
-        (BloodRequest first, BloodRequest second) {
-          return first.distanceInKm.compareTo(
-            second.distanceInKm,
-          );
-        },
-      );
-
-      setState(() {
-        nearbyRequests = requests;
-        findingLocation = false;
-      });
-
-      if (!mounted) {
-        return;
-      }
-
-      showNearbyRequests();
-    } catch (error) {
-      setState(() {
-        findingLocation = false;
-      });
-
-      showMessage(
-        'Could not get your location. Please try again.',
-        const Color(0xFFA10725),
-      );
+    if (!mounted) {
+      return;
     }
+
+    List<BloodRequest> requests = [
+      BloodRequest(
+        patientName: 'Rahim Ahmed',
+        bloodGroup: 'O+',
+        hospitalName: 'Nearby General Hospital',
+        urgency: 'Critical',
+        units: 2,
+        latitude: 0,
+        longitude: 0,
+        distanceInKm: 0.8,
+      ),
+      BloodRequest(
+        patientName: 'Nusrat Jahan',
+        bloodGroup: 'A-',
+        hospitalName: 'Community Medical Center',
+        urgency: 'Urgent',
+        units: 1,
+        latitude: 0,
+        longitude: 0,
+        distanceInKm: 1.5,
+      ),
+      BloodRequest(
+        patientName: 'Karim Hasan',
+        bloodGroup: 'B+',
+        hospitalName: 'Central Care Hospital',
+        urgency: 'Needed',
+        units: 3,
+        latitude: 0,
+        longitude: 0,
+        distanceInKm: 2.3,
+      ),
+      BloodRequest(
+        patientName: 'Fatema Akter',
+        bloodGroup: 'AB+',
+        hospitalName: 'City Emergency Hospital',
+        urgency: 'Critical',
+        units: 2,
+        latitude: 0,
+        longitude: 0,
+        distanceInKm: 3.1,
+      ),
+      BloodRequest(
+        patientName: 'Sakib Hossain',
+        bloodGroup: 'O-',
+        hospitalName: 'Life Care Clinic',
+        urgency: 'Urgent',
+        units: 1,
+        latitude: 0,
+        longitude: 0,
+        distanceInKm: 4.2,
+      ),
+    ];
+
+    setState(() {
+      nearbyRequests = requests;
+      findingLocation = false;
+    });
+
+    showNearbyRequests();
   }
 
   void showNearbyRequests() {
@@ -364,7 +277,7 @@ class _DonateBloodScreenState extends State<DonateBloodScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '${nearbyRequests.length} sample requests found near your GPS location',
+                    '${nearbyRequests.length} sample requests found in your area',
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 12,
@@ -983,26 +896,14 @@ class _DonateBloodScreenState extends State<DonateBloodScreen> {
                           strokeWidth: 2,
                         ),
                       )
-                    : const Icon(Icons.my_location),
+                    : const Icon(Icons.search),
                 label: Text(
                   findingLocation
-                      ? 'FINDING YOUR LOCATION...'
+                      ? 'LOADING REQUESTS...'
                       : 'FIND NEARBY BLOOD REQUESTS',
                 ),
               ),
             ),
-            if (currentLatitude != null) ...[
-              const SizedBox(height: 6),
-              const Center(
-                child: Text(
-                  'GPS location found successfully',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 11,
-                  ),
-                ),
-              ),
-            ],
             const SizedBox(height: 18),
             Text(
               '${hospitals.length} DONATION CENTERS',
