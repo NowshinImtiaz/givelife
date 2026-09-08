@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'home.dart';
 import 'SearchDonors.dart';
 import 'donate_blood.dart';
@@ -32,12 +31,7 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
 
   int selectedUnits = 2;
 
-  bool gettingLocation = false;
-  bool locationFound = false;
   bool sendingRequest = false;
-
-  double? latitude;
-  double? longitude;
 
   final List<String> hospitals = [
     'City Blood Bank',
@@ -57,90 +51,6 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
     super.dispose();
   }
 
-  Future<void> getCurrentLocation() async {
-    setState(() {
-      gettingLocation = true;
-    });
-
-    try {
-      bool locationEnabled =
-          await Geolocator.isLocationServiceEnabled();
-
-      if (locationEnabled == false) {
-        setState(() {
-          gettingLocation = false;
-        });
-
-        showMessage(
-          'Please turn on your device location or GPS.',
-          Colors.orange,
-        );
-
-        return;
-      }
-
-      LocationPermission permission =
-          await Geolocator.checkPermission();
-
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-
-      if (permission == LocationPermission.denied) {
-        setState(() {
-          gettingLocation = false;
-        });
-
-        showMessage(
-          'Location permission was denied.',
-          redColor,
-        );
-
-        return;
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        setState(() {
-          gettingLocation = false;
-        });
-
-        showMessage(
-          'Please enable location permission from Settings.',
-          redColor,
-        );
-
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );
-
-      setState(() {
-        latitude = position.latitude;
-        longitude = position.longitude;
-        locationFound = true;
-        gettingLocation = false;
-      });
-
-      showMessage(
-        'Current location added successfully.',
-        Colors.green,
-      );
-    } catch (error) {
-      setState(() {
-        gettingLocation = false;
-      });
-
-      showMessage(
-        'Could not get your current location.',
-        redColor,
-      );
-    }
-  }
-
   Future<void> sendBloodRequest() async {
     bool validForm = formKey.currentState!.validate();
 
@@ -148,15 +58,6 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
       showMessage(
         'Please fill in all required information.',
         redColor,
-      );
-
-      return;
-    }
-
-    if (locationFound == false) {
-      showMessage(
-        'Please add your current location first.',
-        Colors.orange,
       );
 
       return;
@@ -268,9 +169,6 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
       selectedUrgency = 'Critical';
       selectedUnits = 2;
       selectedHospital = null;
-      locationFound = false;
-      latitude = null;
-      longitude = null;
     });
 
     patientNameController.clear();
@@ -488,60 +386,6 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
                   return null;
                 },
               ),
-
-              const SizedBox(height: 10),
-
-              SizedBox(
-                width: double.infinity,
-                height: 46,
-                child: OutlinedButton.icon(
-                  onPressed: gettingLocation
-                      ? null
-                      : getCurrentLocation,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: locationFound
-                        ? Colors.green
-                        : redColor,
-                    side: BorderSide(
-                      color: locationFound
-                          ? Colors.green
-                          : redColor,
-                    ),
-                  ),
-                  icon: gettingLocation
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : Icon(
-                          locationFound
-                              ? Icons.location_on
-                              : Icons.my_location,
-                        ),
-                  label: Text(
-                    gettingLocation
-                        ? 'GETTING LOCATION...'
-                        : locationFound
-                            ? 'CURRENT LOCATION ADDED'
-                            : 'USE CURRENT LOCATION',
-                  ),
-                ),
-              ),
-
-              if (locationFound) ...[
-                const SizedBox(height: 5),
-                Text(
-                  'Latitude: ${latitude!.toStringAsFixed(4)}, '
-                  'Longitude: ${longitude!.toStringAsFixed(4)}',
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
 
               const SizedBox(height: 20),
 
