@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1074114930776",
+    "project_id": "givelife-8bea2",
+    "storage_bucket": "givelife-8bea2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074114930776:android:ff2abdab90b3b6fc08022d",
+        "android_client_info": {
+          "package_name": "com.example.givelife"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi4stKtFrsIvx3YzoxS-tVTRydiO3AtIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
