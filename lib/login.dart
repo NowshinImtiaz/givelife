@@ -112,44 +112,44 @@ class _LoginState extends State<Login> {
 
             const SizedBox(height: 50),
 
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Email',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xB8101820),
-                  ),
-                ),
-              ),
-            ),
+            // const Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Padding(
+            //     padding: EdgeInsets.only(left: 20),
+            //     child: Text(
+            //       'Email',
+            //       style: TextStyle(
+            //         fontSize: 12,
+            //         color: Color(0xB8101820),
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child: TextField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'abc@xyz.com',
+                  labelText: 'Enter your email',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
 
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Password',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xB8101820),
-                  ),
-                ),
-              ),
-            ),
+            // const Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Padding(
+            //     padding: EdgeInsets.only(left: 20),
+            //     child: Text(
+            //       'Password',
+            //       style: TextStyle(
+            //         fontSize: 12,
+            //         color: Color(0xB8101820),
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
