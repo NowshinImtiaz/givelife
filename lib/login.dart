@@ -1,190 +1,237 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
 import 'signup.dart';
-//import 'home.dart';
 
-class Login extends StatefulWidget{
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
-
 }
-
 
 class _LoginState extends State<Login> {
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
+  void login() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
 
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Wrong email or password'),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor:Color(0xFFF8F3F3),
+      backgroundColor: const Color(0xFFF8F3F3),
 
-      body: GestureDetector(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
 
-        onTap: (){
-          //FocusScope.of(context).unfocus();
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            const SizedBox(height: 75),
 
-            children: [
-              SizedBox(height: 75),
+            Row(
+              children: const [
+                SizedBox(width: 20),
 
-              Row(
-                //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(width: 20),
-                  Icon(Icons.water_drop_outlined,size: 25,color: Color(0xFFA10725),),
-                  SizedBox(width: 15),
-                  Text('GiveLife',
-                    style:TextStyle(
-                      fontSize:20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF101820),
-                    )
+                Icon(
+                  Icons.water_drop_outlined,
+                  size: 25,
+                  color: Color(0xFFA10725),
+                ),
+
+                SizedBox(width: 15),
+
+                Text(
+                  'GiveLife',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF101820),
                   ),
+                ),
+              ],
+            ),
 
-                ],
-              ),
-              SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              Padding(
+            // Heading
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
                 padding: EdgeInsets.only(left: 20),
-                child: Text('Welcome back',
-                    style:TextStyle(
-                      fontSize:25,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF101820),
-                    )
+                child: Text(
+                  'Welcome back',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF101820),
+                  ),
                 ),
               ),
+            ),
 
-              Padding(
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
                 padding: EdgeInsets.only(left: 20),
-                child: Text('Sign in to continue saving lives',
-                    style:TextStyle(
-                      fontSize:18,
-                      color: Color(0xB8101820),
-                    )
-                ),
-              ),
-
-              SizedBox(height: 50),
-              Padding(
-                padding: EdgeInsets.only(left:20),
-                child: Text('Email',
-                    style:TextStyle(
-                      fontSize:12,
-                      color: Color(0xB8101820),
-                    )
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                  //obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'abc@xyz.com',
-                    labelStyle: const TextStyle(
-                        color: Color(0xB8323D49)
-                    ),
-                    border: OutlineInputBorder(),
+                child: Text(
+                  'Sign in to continue saving lives',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xB8101820),
                   ),
                 ),
               ),
+            ),
 
+            const SizedBox(height: 50),
 
-              Padding(
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
                 padding: EdgeInsets.only(left: 20),
-                child: Text('Password',
-                    style:TextStyle(
-                      fontSize:12,
-                      color: Color(0xB8101820),
-                    )
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Enter Password to login',
-                    labelStyle: const TextStyle(
-                        color: Color(0xB8323D49)
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-
-              SizedBox(height:30),
-
-
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFA10725), // Button background color
-                    foregroundColor: Colors.white,            // Text & Icon color
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    elevation: 4,                             // Shadow depth
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // Rounded corners
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);            },
-                  child: const Text(
-                    'Log in',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-
-
-              Row(
-
-                //crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-
-
-                  Text('New here?',style: TextStyle(
+                child: Text(
+                  'Email',
+                  style: TextStyle(
                     fontSize: 12,
                     color: Color(0xB8101820),
-                  )
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup(),),);
-                    },
-                    child: const Text(
-                      'Create an account',
-                      style: TextStyle(
-                        color: Color(0xFFA10725),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child: TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: 'abc@xyz.com',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  'Password',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xB8101820),
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child: TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Password to login',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: login,
+
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFA10725),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ],
+
+                  child: const Text(
+                    'Log in',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-              SizedBox(height: 30),
-            ],
-          ),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                const Text(
+                  'New here?',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xB8101820),
+                  ),
+                ),
+
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Signup(),
+                      ),
+                    );
+                  },
+
+                  child: const Text(
+                    'Create an account',
+                    style: TextStyle(
+                      color: Color(0xFFA10725),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+          ],
         ),
       ),
     );
   }
-
 }
