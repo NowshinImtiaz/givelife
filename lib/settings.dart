@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'donation_history.dart';
 import 'SearchDonors.dart';
 import 'home.dart';
 import 'donate_blood.dart';
+import 'login.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -16,8 +20,48 @@ class _SettingsState extends State<Settings> {
   bool notificationsEnabled = false;
   bool availableToDonate = false;
 
+  String name = '';
+  String bloodType = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  void getUserData() async {
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+
+      var data = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      setState(() {
+        name = data['name'];
+        bloodType = data['bloodType'];
+      });
+    }
+  }
+
+  void signOut() async {
+
+    await FirebaseAuth.instance.signOut();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Login(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F3F3),
 
@@ -36,10 +80,10 @@ class _SettingsState extends State<Settings> {
             child: Row(
               children: [
 
-                 IconButton(
+                IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Color(0xFFF8F3F3),
+                    color: Colors.white,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -55,10 +99,12 @@ class _SettingsState extends State<Settings> {
                     shape: BoxShape.circle,
                   ),
 
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      'S',
-                      style: TextStyle(
+                      name.isNotEmpty
+                          ? name[0].toUpperCase()
+                          : '',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -69,24 +115,24 @@ class _SettingsState extends State<Settings> {
 
                 const SizedBox(width: 12),
 
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
                     Text(
-                      'Sarah Johnson',
-                      style: TextStyle(
+                      name,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
 
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
 
                     Text(
-                      'Blood Type: O+',
-                      style: TextStyle(
+                      'Blood Type: $bloodType',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                       ),
@@ -151,13 +197,7 @@ class _SettingsState extends State<Settings> {
                     width: double.infinity,
 
                     child: ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Signed out'),
-                          ),
-                        );
-                      },
+                      onPressed: signOut,
 
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFFEEEE),
@@ -190,22 +230,30 @@ class _SettingsState extends State<Settings> {
         type: BottomNavigationBarType.fixed,
 
         items: const [
+
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
           ),
+
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_drop,color: Color(0xFFA10725),),
+            icon: Icon(
+              Icons.water_drop,
+              color: Color(0xFFA10725),
+            ),
             label: 'Donate',
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
             label: 'History',
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.more_horiz),
             label: 'More',
@@ -214,25 +262,49 @@ class _SettingsState extends State<Settings> {
 
         onTap: (index) {
 
-
-          if(index==0){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+            );
           }
 
-          else if(index==1){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SearchDonors(),
+              ),
+            );
           }
 
-          else if(index==2){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
+          else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DonateBloodScreen(),
+              ),
+            );
           }
 
-          else if(index==3){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+          else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DonationHistory(),
+              ),
+            );
           }
 
-          else if(index==4){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
+          else if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Settings(),
+              ),
+            );
           }
         },
       ),

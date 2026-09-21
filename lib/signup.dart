@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'home.dart';
 
 class Signup extends StatefulWidget {
@@ -11,57 +12,62 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
 
-  // Controllers for Email and Password
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
+  final phoneController = TextEditingController();
   final passwordController = TextEditingController();
+  final bloodController = TextEditingController();
 
-  // Firebase account creation
-  Future<void> createAccount() async {
+  void createAccount() async {
+
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+
+      UserCredential user = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
 
-      print('Account created successfully!');
-      print(credential.user);
-
-      if (!mounted) return;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.user!.uid)
+          .set({
+        'name': nameController.text,
+        'email': emailController.text,
+        'phone': phoneController.text,
+        'bloodType': bloodController.text,
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Account created successfully!'),
+          content: Text('Account created successfully'),
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
         ),
       );
 
     } on FirebaseAuthException catch (e) {
-      String message;
 
-      if (e.code == 'weak-password') {
-        message = 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        message = 'The account already exists for that email.';
-      } else if (e.code == 'invalid-email') {
-        message = 'The email address is not valid.';
-      } else {
-        message = 'Error: ${e.code}';
+      String message = 'Something went wrong';
+
+      if (e.code == 'email-already-in-use') {
+        message = 'This email already exists';
       }
-
-      if (!mounted) return;
+      else if (e.code == 'weak-password') {
+        message = 'Password is too weak';
+      }
+      else if (e.code == 'invalid-email') {
+        message = 'Invalid email';
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
-        ),
-      );
-
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Something went wrong: $e'),
         ),
       );
     }
@@ -69,50 +75,45 @@ class _SignupState extends State<Signup> {
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
+    bloodController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xFFF8F3F3),
 
       appBar: AppBar(
         backgroundColor: const Color(0xFFA10725),
-        foregroundColor: const Color(0xFFF8F3F3),
-        title: Row(
-          children: [
-            const Text(
-              'Create Account',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFF8F3F3),
-              ),
-            ),
-          ],
+        foregroundColor: Colors.white,
+
+        title: const Text(
+          'Create Account',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
 
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
 
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            const SizedBox(height: 10),
 
-            children: [
-
-              const SizedBox(height: 10),
-
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
                   'Become a donor',
                   style: TextStyle(
@@ -122,9 +123,12 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
               ),
+            ),
 
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
                   'Takes less than a minute',
                   style: TextStyle(
@@ -133,166 +137,120 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 18),
+            const SizedBox(height: 18),
 
-              // Full Name
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Full Name',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xB8101820),
-                  ),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Full Name'),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Enter your name',
+                  border: OutlineInputBorder(),
                 ),
               ),
+            ),
 
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Enter your name',
-                    labelStyle: TextStyle(
-                      color: Color(0xB8323D49),
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Email'),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: 'abc@xyz.com',
+                  border: OutlineInputBorder(),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 18),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Phone'),
+              ),
+            ),
 
-              // Email
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Email',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xB8101820),
-                  ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextField(
+                controller: phoneController,
+                decoration: const InputDecoration(
+                  labelText: '+880 ****-******',
+                  border: OutlineInputBorder(),
                 ),
               ),
+            ),
 
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'abc@xyz.com',
-                    labelStyle: TextStyle(
-                      color: Color(0xB8323D49),
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Password'),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Create your password',
+                  border: OutlineInputBorder(),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 18),
+            const Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Blood Group'),
+              ),
+            ),
 
-              // Phone
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Phone',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xB8101820),
-                  ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextField(
+                controller: bloodController,
+                decoration: const InputDecoration(
+                  labelText: 'A+/A-/B+/B-/O+/O-/AB+/AB-',
+                  border: OutlineInputBorder(),
                 ),
               ),
+            ),
 
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: '+880 ****-******',
-                    labelStyle: TextStyle(
-                      color: Color(0xB8323D49),
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
+            const SizedBox(height: 50),
 
-              const SizedBox(height: 18),
-
-              // Password
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Password',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xB8101820),
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Create your password',
-                    labelStyle: TextStyle(
-                      color: Color(0xB8323D49),
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              // Blood Group
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Blood Group',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xB8101820),
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'A+/A-/B+/B-/O+/O-/AB+/AB-',
-                    labelStyle: TextStyle(
-                      color: Color(0xB8323D49),
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 160),
-
-              // Create Account Button
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: SizedBox(
+                width: double.infinity,
                 child: ElevatedButton(
+                  onPressed: createAccount,
+
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFA10725),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 28,
-                      vertical: 14,
-                    ),
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+                    padding: const EdgeInsets.all(15),
                   ),
-
-                  onPressed: createAccount,
 
                   child: const Text(
                     'Create Account',
@@ -303,9 +261,9 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
               ),
+            ),
 
-            ],
-          ),
+          ],
         ),
       ),
     );
