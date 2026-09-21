@@ -2,38 +2,19 @@ import 'package:flutter/material.dart';
 import 'SearchDonors.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String userName;
-  final String bloodType;
-  final int donations;
-  final int livesSaved;
-  final int lastDonationDays;
 
-  const HomeScreen({
-    super.key,
-    this.userName = 'Donor',
-    this.bloodType = '',
-    this.donations = 0,
-    this.livesSaved = 0,
-    this.lastDonationDays = 0,
-  });
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
 
-  static const Color darkMaroon = Color(0xFFA10725);
-  static const Color lightBg = Color(0xFFF8F3F3);
 
   @override
   Widget build(BuildContext context) {
-    final String formattedDonations = widget.donations < 10 
-        ? '0${widget.donations}' 
-        : '${widget.donations}';
 
-    final String displayBloodType = widget.bloodType.isNotEmpty ? widget.bloodType : '--';
 
     return Scaffold(
       backgroundColor: lightBg,

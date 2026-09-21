@@ -1,0 +1,412 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'donation_history.dart';
+import 'SearchDonors.dart';
+import 'home.dart';
+import 'donate_blood.dart';
+import 'login.dart';
+
+class Settings extends StatefulWidget {
+  const Settings({super.key});
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+
+  bool notificationsEnabled = false;
+  bool availableToDonate = false;
+
+  String name = '';
+  String bloodType = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  void getUserData() async {
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+
+      var data = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      setState(() {
+        name = data['name'];
+        bloodType = data['bloodType'];
+      });
+    }
+  }
+
+  void signOut() async {
+
+    await FirebaseAuth.instance.signOut();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Login(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F3F3),
+
+      body: Column(
+        children: [
+
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(
+              top: 45,
+              bottom: 20,
+              left: 20,
+            ),
+            color: const Color(0xFFA10725),
+
+            child: Row(
+              children: [
+
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+
+                Container(
+                  width: 50,
+                  height: 50,
+
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+
+                  child: Center(
+                    child: Text(
+                      name.isNotEmpty
+                          ? name[0].toUpperCase()
+                          : '',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    Text(
+                      'Blood Type: $bloodType',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+
+                  settingItem(
+                    'Edit Profile',
+                    'San Francisco, CA',
+                    Icons.person_outline,
+                  ),
+
+                  toggleItem(
+                    'Notifications',
+                    notificationsEnabled
+                        ? 'Notifications allowed'
+                        : 'Notifications not allowed',
+                    Icons.notifications_none,
+                    notificationsEnabled,
+                    (value) {
+                      setState(() {
+                        notificationsEnabled = value;
+                      });
+                    },
+                  ),
+
+                  toggleItem(
+                    'Availability',
+                    availableToDonate
+                        ? 'Currently available to donate'
+                        : 'Currently unavailable to donate',
+                    Icons.favorite_border,
+                    availableToDonate,
+                    (value) {
+                      setState(() {
+                        availableToDonate = value;
+                      });
+                    },
+                  ),
+
+                  settingItem(
+                    'Privacy Policy',
+                    '',
+                    Icons.lock_outline,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                    width: double.infinity,
+
+                    child: ElevatedButton(
+                      onPressed: signOut,
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFFEEEE),
+                        foregroundColor: const Color(0xFFA10725),
+                        elevation: 0,
+                        padding: const EdgeInsets.all(15),
+                      ),
+
+                      child: const Text(
+                        'SIGN OUT',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 4,
+        selectedItemColor: const Color(0xFFA10725),
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+
+        items: const [
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.water_drop,
+              color: Color(0xFFA10725),
+            ),
+            label: 'Donate',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.more_horiz),
+            label: 'More',
+          ),
+        ],
+
+        onTap: (index) {
+
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+            );
+          }
+
+          else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SearchDonors(),
+              ),
+            );
+          }
+
+          else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DonateBloodScreen(),
+              ),
+            );
+          }
+
+          else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DonationHistory(),
+              ),
+            );
+          }
+
+          else if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Settings(),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget settingItem(
+    String title,
+    String subtitle,
+    IconData icon,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 3,
+      ),
+
+      color: Colors.white,
+
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: const Color(0xFFA10725),
+        ),
+
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+        ),
+
+        subtitle: subtitle.isNotEmpty
+            ? Text(
+                subtitle,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey,
+                ),
+              )
+            : null,
+
+        trailing: const Icon(
+          Icons.chevron_right,
+          color: Colors.grey,
+        ),
+
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('$title selected'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget toggleItem(
+    String title,
+    String subtitle,
+    IconData icon,
+    bool value,
+    Function(bool) onChanged,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 3,
+      ),
+
+      color: Colors.white,
+
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: const Color(0xFFA10725),
+        ),
+
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+        ),
+
+        subtitle: Text(
+          subtitle,
+          style: const TextStyle(
+            fontSize: 11,
+            color: Colors.grey,
+          ),
+        ),
+
+        trailing: Switch(
+          value: value,
+          activeThumbColor: const Color(0xFFA10725),
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
+}
