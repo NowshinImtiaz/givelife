@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'settings.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'request_blood_screen.dart';
+import 'donate_blood.dart';
+import 'package:givelife/settings.dart';
+import 'SearchDonors.dart';
 import 'donation_history.dart';
 import 'home.dart';
 
@@ -11,6 +17,8 @@ State<SearchDonors> createState() => _SearchDonorsState();
 }
 
 class _SearchDonorsState extends State<SearchDonors> {
+
+  int _currentIndex = 1;
   Widget bloodGroupBox(String bloodGroup) {
     return Container(
       width: 70,
@@ -109,6 +117,32 @@ backgroundColor: const Color(0xFFA10725),
 
 ),
   bottomNavigationBar: BottomNavigationBar(
+
+    currentIndex: _currentIndex,
+    onTap: (index) {
+      if(index==0){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
+
+      }
+
+      else if(index==1){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+      }
+
+      else if(index==2){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
+      }
+
+
+      else if(index==3){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+      }
+
+      else if(index==4){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
+      }
+
+    },
     items: const [
       BottomNavigationBarItem(
         icon: Icon(Icons.home),
@@ -126,6 +160,11 @@ backgroundColor: const Color(0xFFA10725),
       ),
 
       BottomNavigationBarItem(
+        icon: Icon(Icons.history),
+        label: 'History',
+      ),
+
+      BottomNavigationBarItem(
         icon: Icon(Icons.more_horiz),
         label: 'More',
       ),
@@ -134,7 +173,7 @@ backgroundColor: const Color(0xFFA10725),
     selectedItemColor: Color(0xFFA10725),
     unselectedItemColor: Colors.grey,
     type: BottomNavigationBarType.fixed,
-    currentIndex: 0,
+    //currentIndex: 0,
   ),
   );
 }

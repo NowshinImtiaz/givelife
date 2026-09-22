@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:givelife/request_blood_screen.dart';
 import 'SearchDonors.dart';
+import 'donate_blood.dart';
 import 'settings.dart';
 import 'donation_history.dart';
 
@@ -209,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SearchDonors()),
+                        MaterialPageRoute(builder: (context) => const RequestBloodScreen()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -236,15 +238,25 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SearchDonors()),
-            );
-          } else {
-            setState(() {
-              _currentIndex = index;
-            });
+          if(index==0){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
+
+          }
+
+          else if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
+          }
+
+          else if(index==3){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+          }
+
+          else if(index==4){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
           }
         },
         selectedItemColor: darkMaroon,

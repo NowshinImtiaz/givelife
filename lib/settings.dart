@@ -150,11 +150,11 @@ class _SettingsState extends State<Settings> {
               child: Column(
                 children: [
 
-                  settingItem(
-                    'Edit Profile',
-                    'San Francisco, CA',
-                    Icons.person_outline,
-                  ),
+                  // settingItem(
+                  //   'Edit Profile',
+                  //   'San Francisco, CA',
+                  //   Icons.person_outline,
+                  // ),
 
                   toggleItem(
                     'Notifications',

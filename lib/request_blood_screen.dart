@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RequestBloodScreen extends StatefulWidget {
   const RequestBloodScreen({super.key});
@@ -8,6 +10,8 @@ class RequestBloodScreen extends StatefulWidget {
 }
 
 class _RequestBloodScreenState extends State<RequestBloodScreen> {
+
+
   final Color redColor = const Color(0xFFA10725);
   final patient = TextEditingController();
   final hospital = TextEditingController();
@@ -15,13 +19,56 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
   String urgency = 'Normal';
   int units = 1;
 
-  void sendRequest() {
-    String message = patient.text.isEmpty || hospital.text.isEmpty
-        ? 'Please fill all fields.'
-        : 'Blood request sent successfully!';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+  void sendRequest() async {
+    if (patient.text.isEmpty || hospital.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all fields.'),
+        ),
+      );
+      return;
+    }
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please log in first.'),
+        ),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('bloodRequests')
+          .add({
+        'patient': patient.text.trim(),
+        'hospital': hospital.text.trim(),
+        'bloodGroup': bloodGroup,
+        'units': units,
+        'urgency': urgency,
+        'status': 'active',
+        'requesterId': user.uid,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Blood request sent successfully!'),
+        ),
+      );
+
+      patient.clear();
+      hospital.clear();
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+        ),
+      );
+    }
   }
 
   InputDecoration field(String label) {
@@ -48,7 +95,7 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
           TextField(controller: hospital, decoration: field('Hospital Name')),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: bloodGroup,
+           // value: bloodGroup,
             decoration: field('Blood Group'),
             items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
                 .map((item) => DropdownMenuItem(
@@ -60,7 +107,7 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<int>(
-            value: units,
+           // value: units,
             decoration: field('Units Needed'),
             items: [1, 2, 3, 4]
                 .map((item) => DropdownMenuItem(
@@ -72,7 +119,7 @@ class _RequestBloodScreenState extends State<RequestBloodScreen> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: urgency,
+            //value: urgency,
             decoration: field('Urgency'),
             items: ['Normal', 'Urgent', 'Critical']
                 .map((item) => DropdownMenuItem(
