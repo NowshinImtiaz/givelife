@@ -1,20 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:givelife/request_blood_screen.dart';
 import 'SearchDonors.dart';
+import 'donate_blood.dart';
+import 'settings.dart';
+import 'donation_history.dart';
 
 class HomeScreen extends StatefulWidget {
+  final String userName;
+  final String bloodType;
+  final int donations;
+  final int livesSaved;
+  final int lastDonationDays;
 
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    this.userName = 'Donor',
+    this.bloodType = '',
+    this.donations = 0,
+    this.livesSaved = 0,
+    this.lastDonationDays = 0,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
 
+  static const Color darkMaroon = Color(0xFFA10725);
+  static const Color lightBg = Color(0xFFF8F3F3);
 
   @override
   Widget build(BuildContext context) {
+    final String formattedDonations = widget.donations < 10
+        ? '0${widget.donations}'
+        : '${widget.donations}';
 
+    final String displayBloodType = widget.bloodType.isNotEmpty ? widget.bloodType : '--';
 
     return Scaffold(
       backgroundColor: lightBg,
@@ -188,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SearchDonors()),
+                        MaterialPageRoute(builder: (context) => const RequestBloodScreen()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -215,15 +238,25 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SearchDonors()),
-            );
-          } else {
-            setState(() {
-              _currentIndex = index;
-            });
+          if(index==0){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen(),),);
+
+          }
+
+          else if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
+          }
+
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
+          }
+
+          else if(index==3){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+          }
+
+          else if(index==4){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
           }
         },
         selectedItemColor: darkMaroon,

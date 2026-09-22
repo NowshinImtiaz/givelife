@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DonateBloodScreen extends StatefulWidget {
   const DonateBloodScreen({super.key});
@@ -8,12 +10,16 @@ class DonateBloodScreen extends StatefulWidget {
 }
 
 class _DonateBloodScreenState extends State<DonateBloodScreen> {
+
+  int _currentIndex = 2;
   final Color redColor = const Color(0xFFA10725);
   bool available = false;
 
+  String? selectedHospital;
+
   void donate() {
     String message = available
-        ? 'Thank you! You are ready to donate.'
+        ? 'You are ready to donate.'
         : 'Turn on availability first.';
     ScaffoldMessenger.of(
       context,
@@ -37,7 +43,7 @@ class _DonateBloodScreenState extends State<DonateBloodScreen> {
               title: const Text('Available to Donate'),
               subtitle: Text(available ? 'Available' : 'Not available'),
               value: available,
-              activeColor: redColor,
+              //activeColor: redColor,
               onChanged: (value) {
                 setState(() => available = value);
               },

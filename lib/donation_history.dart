@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart' hide Settings;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:givelife/request_blood_screen.dart';
+import 'donate_blood.dart';
 import 'settings.dart';
 import 'SearchDonors.dart';
 import 'home.dart';
@@ -42,142 +46,191 @@ class DonationHistory extends StatelessWidget {
         ),
       ),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      body:StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(stream: _donationStream(), builder: (context, snapshot){
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFFA10725),
+            ),
+          );
+        }
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 25),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFA10725),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+        final donations = snapshot.data?.docs ?? [];
 
-                    Column(
-                      children: const [
-                        Text(
-                          '4',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'DONATIONS',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
 
-                    Column(
-                      children: const [
-                        Text(
-                          '12',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'LIVES SAVED',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
+        int donationCount = donations.length;
 
-                    Column(
-                      children: const [
-                        Text(
-                          '4L',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'BLOOD GIVEN',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+        int livesSaved = 0;
+        int bloodGiven = 0;
 
-              const SizedBox(height: 25),
+        for (var donation in donations) {
+          final data = donation.data();
 
-              const Text(
-                'ALL DONATIONS',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+          livesSaved += (data['livesSaved'] ?? 0) as int;
+          bloodGiven += (data['units'] ?? 0) as int;
+        }
 
-              const SizedBox(height: 12),
+        return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                           Container(
+                             width: double.infinity,
+                             padding: const EdgeInsets.symmetric(vertical: 25),
+                             decoration: BoxDecoration(
+                               color: const Color(0xFFA10725),
+                               borderRadius: BorderRadius.circular(15),
+                             ),
+                             child: Row(
+                               mainAxisAlignment: MainAxisAlignment.spaceAround,
+                               children: [
 
-              donationItem(
-                'City Blood Bank',
-                'Whole Blood • 1 unit',
-                'Jun 15, 2024',
-                '4th',
-              ),
+                                 Column(
+                                   children: [
+                                     Text(
+                                       '$donationCount',
+                                       style: const TextStyle(
+                                         color: Colors.white,
+                                         fontSize: 32,
+                                         fontWeight: FontWeight.bold,
+                                       ),
+                                     ),
+                                     const SizedBox(height: 4),
+                                     const Text(
+                                       'DONATIONS',
+                                       style: TextStyle(
+                                         color: Colors.white,
+                                         fontSize: 13,
+                                       ),
+                                     ),
+                                   ],
+                                 ),
 
-              const SizedBox(height: 12),
+                                 Column(
+                                   children: [
+                                     Text(
+                                       '$livesSaved',
+                                       style: const TextStyle(
+                                         color: Colors.white,
+                                         fontSize: 32,
+                                         fontWeight: FontWeight.bold,
+                                       ),
+                                     ),
+                                     const SizedBox(height: 4),
+                                     const Text(
+                                       'LIVES SAVED',
+                                       style: TextStyle(
+                                         color: Colors.white,
+                                         fontSize: 13,
+                                       ),
+                                     ),
+                                   ],
+                                 ),
 
-              donationItem(
-                'Red Cross Center',
-                'Whole Blood • 1 unit',
-                'Sep 3, 2024',
-                '3rd',
-              ),
+                                 Column(
+                                   children: [
+                                     Text(
+                                       '${bloodGiven}L',
+                                       style: const TextStyle(
+                                         color: Colors.white,
+                                         fontSize: 32,
+                                         fontWeight: FontWeight.bold,
+                                       ),
+                                     ),
+                                     const SizedBox(height: 4),
+                                     const Text(
+                                       'BLOOD GIVEN',
+                                       style: TextStyle(
+                                         color: Colors.white,
+                                         fontSize: 13,
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+                               ],
+                             ),
+                           ),
 
-              const SizedBox(height: 12),
+                           const SizedBox(height: 25),
 
-              donationItem(
-                'Memorial Clinic',
-                'Platelets • 1 unit',
-                'May 22, 2024',
-                '2nd',
-              ),
+                           const Text(
+                             'ALL DONATIONS',
+                             style: TextStyle(
+                               color: Colors.grey,
+                               fontSize: 15,
+                               fontWeight: FontWeight.bold,
+                             ),
+                           ),
 
-              const SizedBox(height: 12),
+                           const SizedBox(height: 12),
+                            if (donations.isEmpty)
+                              Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 50,
+                                horizontal: 20,
+                              ),
 
-              donationItem(
-                'City Blood Bank',
-                'Whole Blood • 1 unit',
-                'Feb 10, 2024',
-                '1st',
-              ),
+                              child: const Column(
+                                  children: [
 
-              const SizedBox(height: 20),
-            ],
-          ),
+                                    Icon(
+                                      Icons.water_drop_outlined,
+                                      size: 55,
+                                      color: Colors.grey,
+                                    ),
+
+                                    SizedBox(height: 15),
+
+                                    Text(
+                                      'No donations yet',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    ],
+                              ),
+                              ),
+
+                    if (donations.isNotEmpty)
+                    ...List.generate(
+                    donations.length,
+                    (index) {
+
+        final data = donations[index].data();
+
+        final hospital =
+        data['hospital'] ?? 'Unknown';
+
+        final type =
+        data['type'] ?? 'Blood';
+
+        final units =
+        data['units'] ?? 0;
+
+        return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+
+        child: donationItem(
+        hospital,
+        '$type • $units unit',
+        '${index+1}',
         ),
-      ),
+        );
+        },),
+
+
+                   ],
+              ),
+            ),
+        );
+
+
+      }),
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 3,
@@ -218,35 +271,41 @@ class DonationHistory extends StatelessWidget {
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchDonors(),),);
           }
 
-          // else if(index==2){
-          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
-          // }
+          else if(index==2){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonateBloodScreen(),),);
+          }
 
           else if(index==3){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
+            //Navigator.push(context, MaterialPageRoute(builder: (context)=>const DonationHistory(),),);
           }
 
           else if(index==4){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>const Settings(),),);
           }
-
-          // if (index == 4) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const Settings(),
-          //     ),
-          //   );
-          // }
         },
       ),
     );
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> _donationStream() {
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return const Stream.empty();
+    }
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('donations')
+        .snapshots();
+  }
+
+
   Widget donationItem(
     String hospital,
     String type,
-    String date,
     String number,
   ) {
     return Container(
@@ -304,17 +363,6 @@ class DonationHistory extends StatelessWidget {
 
                 const SizedBox(height: 3),
 
-                Text(
-                  date,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
           Text(
             number,
             style: const TextStyle(
@@ -325,6 +373,9 @@ class DonationHistory extends StatelessWidget {
           ),
         ],
       ),
+    ),
+      ],
+    ),
     );
   }
 }

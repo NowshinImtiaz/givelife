@@ -20,6 +20,20 @@ class _SignupState extends State<Signup> {
 
   void createAccount() async {
 
+    if (bloodController.text.trim().toUpperCase() != 'A+' &&
+        bloodController.text.trim().toUpperCase() != 'A-' &&
+        bloodController.text.trim().toUpperCase() != 'B+' &&
+        bloodController.text.trim().toUpperCase() != 'B-' &&
+        bloodController.text.trim().toUpperCase() != 'O+' &&
+        bloodController.text.trim().toUpperCase() != 'O-' &&
+        bloodController.text.trim().toUpperCase() != 'AB+' &&
+        bloodController.text.trim().toUpperCase() != 'AB-') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter a valid blood group')),
+      );
+      return;
+    }
+
     try {
 
       UserCredential user = await FirebaseAuth.instance
@@ -141,13 +155,13 @@ class _SignupState extends State<Signup> {
 
             const SizedBox(height: 18),
 
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Full Name'),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 20),
+            //   child: Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: Text('Full Name'),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.all(20),
@@ -160,51 +174,51 @@ class _SignupState extends State<Signup> {
               ),
             ),
 
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Email'),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 20),
+            //   child: Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: Text('Email'),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.all(20),
               child: TextField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'abc@xyz.com',
+                  labelText: 'Enter your email',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
 
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Phone'),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 20),
+            //   child: Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: Text('Phone'),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.all(20),
               child: TextField(
                 controller: phoneController,
                 decoration: const InputDecoration(
-                  labelText: '+880 ****-******',
+                  labelText: 'Enter Phone Number +880 ****-******',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
 
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Password'),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 20),
+            //   child: Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: Text('Password'),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.all(20),
